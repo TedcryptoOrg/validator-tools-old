@@ -6,6 +6,7 @@ import {MessageInterface} from "../../Provider/Cosmjs/Messages/MessageInterface.
 import {Delegation, StakingRestClient} from "../../Service/Cosmos/StakingRestClient.ts";
 import {sleep} from "../../Util/Sleep.ts";
 import {Account} from "../../Account/Account.ts";
+import {getDateFormatted} from "../../Util/Date.ts";
 
 type Reward = {
     delegatorAddress: string,
@@ -90,7 +91,7 @@ export class PayRewards implements CommandInterface {
     async sendMessages(messages: MessageInterface[]): Promise<void>
     {
         const todayDate = new Date();
-        const result = await this.cosmjs.sendMessages(messages, 'Tedcrypto.io - Compensation Rewards ' + todayDate.getDay() + '/' + todayDate.getMonth() + '/' + todayDate.getFullYear());
+        const result = await this.cosmjs.sendMessages(messages, 'Tedcrypto.io - Compensation Rewards ' + getDateFormatted(todayDate));
 
         console.log('Transaction result: ', result, this.getExplorerUrl(result.transaction_hash));
     }
