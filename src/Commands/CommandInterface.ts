@@ -1,8 +1,8 @@
 export interface CommandInterface {
-    name: string;
-    description: string;
+  name: string
+  description: string
 
-    validate: (args: string[]) => boolean;
+  validate: (args: string[]) => boolean
 
-    run: (args: string[]) => void;
+  run: (args: string[]) => void
 }

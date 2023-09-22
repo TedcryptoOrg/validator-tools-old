@@ -43,7 +43,7 @@ export class Keystore {
   }
 
   list (): string[] {
-    return fs.readdirSync(this.KEY_DIR);
+    return fs.readdirSync(this.KEY_DIR)
   }
 
   load (keyName: string, password: string): string {

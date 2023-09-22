@@ -2,8 +2,8 @@ import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import * as promptly from 'promptly'
 import { Keystore } from '../src/Util/Keystore'
-import {Account} from "../src/Account/Account.ts";
-import {ChainDirectory} from "@tedcryptoorg/cosmos-directory";
+import { Account } from '../src/Account/Account.ts'
+import { ChainDirectory } from '@tedcryptoorg/cosmos-directory'
 
 const keystore = new Keystore()
 
@@ -81,44 +81,38 @@ yargs(hideBin(process.argv))
       console.log(mnemonic)
     }
   )
-    .command('list',
-        'List all keys',
-        (yargs) => {
-            return yargs
-                .option('password', {
-                    type: 'string',
-                    describe: 'password to decrypt the key',
-                    demandOption: false
-                })
-        },
-        async (yargs) => {
-            const files = keystore.list();
-            for (const file of files) {
-                if (!file.includes('.key')) {
-                    continue;
-                }
-                const fileName = file.split('.')[0];
-                try {
-                    console.log(`${fileName}: ` + (await getAccountAddress(fileName, yargs.password ?? '')));
-                } catch (error) {
-                    const password = await promptly.password(`Enter the password used to decrypt the key "${fileName}":`)
-                    console.log(`${fileName}: ` + (await getAccountAddress(fileName, password)));
-                }
-            }
-        },
-    )
+  .command('list',
+    'List all keys',
+    (yargs) => {
+      return yargs
+        .option('password', {
+          type: 'string',
+          describe: 'password to decrypt the key',
+          demandOption: false
+        })
+    },
+    async (yargs) => {
+      const files = keystore.list()
+      for (const file of files) {
+        if (!file.includes('.key')) {
+          continue
+        }
+        const fileName = file.split('.')[0]
+        try {
+          console.log(`${fileName}: ` + (await getAccountAddress(fileName, yargs.password ?? '')))
+        } catch (error) {
+          const password = await promptly.password(`Enter the password used to decrypt the key "${fileName}":`)
+          console.log(`${fileName}: ` + (await getAccountAddress(fileName, password)))
+        }
+      }
+    }
+  )
   .wrap(100)
   .parse()
 
+async function getAccountAddress (fileName: string, password: string): Promise<string> {
+  const chain = (await new ChainDirectory().getChainData(fileName)).chain
+  const account = await Account.create(chain, fileName, password)
 
-async function getAccountAddress(fileName: string, password: string): Promise<string>
-{
-    const chain = (await new ChainDirectory().getChainData(fileName)).chain;
-    if (!chain) {
-        throw new Error('Chain not found');
-    }
-
-    const account = await Account.create(chain, fileName, password);
-
-    return account.getAddress();
+  return await account.getAddress()
 }
