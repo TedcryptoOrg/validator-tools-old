@@ -2,10 +2,19 @@
   "name": "validator-tools",
   "module": "index.ts",
   "type": "module",
-  "devDependencies": {
-    "bun-types": "latest"
+  "dependencies": {
+    "@tedcryptoorg/cosmos-directory": "^0.1.0",
+    "@tedcryptoorg/cosmos-signer": "^0.0.8",
+    "axios": "^1.5.0",
+    "npid": "^0.4.0",
+    "promptly": "^3.2.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/promptly": "^3.0.2",
+    "bun-types": "latest",
+    "jest": "^29.7.0"
   }
 }
